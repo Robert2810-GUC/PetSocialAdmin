@@ -8,8 +8,12 @@ import {
   Pets, Category, Palette, Group, Menu as MenuIcon, Dashboard
 } from '@mui/icons-material';
 
+import ServerDown from "./pages/ServerDown";
+
 import PetTypes from './pages/PetTypes';
-// import Breeds from './pages/Breeds';
+import Breeds from './pages/Breeds';
+import DashboardPage from './pages/DashboardPage';
+
 // import Colors from './pages/Colors';
 // import UserTypes from './pages/UserTypes';
 
@@ -134,7 +138,7 @@ function Layout({ children }) {
         component="main"
         sx={{
           flexGrow: 1,
-          p: { xs: 2, sm: 4 },
+          p: { xs: 0, sm: 1 },
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           mt: 8 // AppBar height
         }}
@@ -146,10 +150,7 @@ function Layout({ children }) {
 }
 
 // Dummy pages for routes (replace as you build)
-function DashboardPage() {
-  return <Typography variant="h4">Dashboard (Coming soon!)</Typography>;
-}
-function Breeds() { return <Typography variant="h4">Breeds CRUD (TBD)</Typography>; }
+
 function Colors() { return <Typography variant="h4">Colors CRUD (TBD)</Typography>; }
 function UserTypes() { return <Typography variant="h4">User Types CRUD (TBD)</Typography>; }
 
@@ -163,6 +164,7 @@ export default function App() {
           <Route path="/breeds" element={<Breeds />} />
           <Route path="/colors" element={<Colors />} />
           <Route path="/user-types" element={<UserTypes />} />
+          <Route path="/server-down" element={<ServerDown />} />
         </Routes>
       </Layout>
     </BrowserRouter>
