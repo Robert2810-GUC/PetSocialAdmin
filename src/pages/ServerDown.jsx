@@ -3,7 +3,7 @@ import { Box, Typography, CircularProgress, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const CHECK_INTERVAL = 5000; // 5 seconds
-const API_CHECK_URL = "/api/admin/weatherforecast";
+const API_CHECK_URL = "/weatherforecast";
 
 export default function ServerDown() {
   const [checking, setChecking] = useState(true);

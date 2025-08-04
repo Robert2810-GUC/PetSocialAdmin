@@ -20,7 +20,7 @@ function Breeds() {
   const [searchText, setSearchText] = useState("");
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ id: null, name: "", sortOrder: "", petTypeID: "" });
+  const [form, setForm] = useState({ id: null, name: "", sortOrder: 0, petTypeID: "" });
   const [saving, setSaving] = useState(false);
   const [notif, setNotif] = useState({ open: false, msg: "", type: "success" });
 
@@ -172,7 +172,8 @@ function Breeds() {
       )}
 
       {/* Add/Edit Dialog */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
+      <Dialog open={open} onClose={saving ? null : handleClose} disableEscapeKeyDown={saving}         
+          disableBackdropClick={true}   fullWidth maxWidth="xs">
         <DialogTitle sx={{ color: gold, fontWeight: 700 }}>
           {form.id ? "Edit Breed" : "Add Breed"}
         </DialogTitle>
@@ -208,7 +209,7 @@ function Breeds() {
           </FormControl>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="text">Cancel</Button>
+          <Button onClick={handleClose}  disabled={saving}  color="secondary" variant="text">Cancel</Button>
           <Button
             onClick={handleSave}
             variant="contained"

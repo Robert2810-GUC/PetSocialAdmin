@@ -7,7 +7,7 @@ import {
 import { Edit, Delete, Add } from "@mui/icons-material";
 import { api, API_BASE_URL } from "../api";
 
-const ADMIN_API = "/api/lookup/pet-types";
+const ADMIN_API = "/api/admin/pet-types";
 
 const gold = "#ae8625";
 const brown = "#7a5c27";
@@ -17,7 +17,7 @@ function PetTypes() {
   const [petTypes, setPetTypes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ id: null, name: "", imagePath: "" });
+  const [form, setForm] = useState({ id: null, name: "", sortOrder:0, imagePath: "" });
   const [uploadFile, setUploadFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [notif, setNotif] = useState({ open: false, msg: "", type: "success" });
@@ -31,7 +31,7 @@ function PetTypes() {
     setLoading(false);
   }
 
-  const handleOpen = (item = { id: null, name: "", imagePath: "" }) => {
+  const handleOpen = (item = { id: null, name: "", sortOrder: "", imagePath: "" }) => {
     setForm(item);
     setUploadFile(null);
     setOpen(true);
@@ -102,6 +102,7 @@ function PetTypes() {
               <TableRow>
                 <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Image</TableCell>
                 <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Name</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>SortOrder</TableCell>
                 <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -119,6 +120,7 @@ function PetTypes() {
                     ) : "-"}
                   </TableCell>
                   <TableCell sx={{ fontWeight: 600, color: brown }}>{row.name}</TableCell>
+                  <TableCell sx={{ fontWeight: 600, color: brown }}>{row.sortOrder}</TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edit">
                       <IconButton onClick={() => handleOpen(row)} sx={{ color: gold }}>
@@ -144,7 +146,8 @@ function PetTypes() {
       )}
 
       {/* Add/Edit Dialog */}
-      <Dialog open={open} onClose={handleClose} fullWidth maxWidth="xs">
+      <Dialog open={open} onClose={saving ? null : handleClose} disableEscapeKeyDown={saving}         
+          disableBackdropClick={true}   fullWidth maxWidth="xs">
         <DialogTitle sx={{ color: gold, fontWeight: 700 }}>
           {form.id ? "Edit Pet Type" : "Add Pet Type"}
         </DialogTitle>
@@ -157,6 +160,14 @@ function PetTypes() {
             fullWidth sx={{ mb: 2 }}
             autoFocus
           /></Box>
+          <TextField
+            label="Sort Order"  
+            type="number"
+            placeholder="Set 0 for default"
+            value={form.sortOrder}
+            onChange={e => setForm({ ...form, sortOrder: e.target.value })}
+            fullWidth sx={{ mb: 2 }}
+          />
           <Button
             component="label"
             variant="outlined"
@@ -184,7 +195,7 @@ function PetTypes() {
           )}
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="secondary" variant="text">Cancel</Button>
+          <Button onClick={handleClose}  disabled={saving}  color="secondary" variant="text">Cancel</Button>
           <Button
             onClick={handleSave}
             variant="contained"

@@ -10,11 +10,10 @@ import {
 
 import ServerDown from "./pages/ServerDown";
 
+import DashboardPage from './pages/DashboardPage';
 import PetTypes from './pages/PetTypes';
 import Breeds from './pages/Breeds';
-import DashboardPage from './pages/DashboardPage';
-
-// import Colors from './pages/Colors';
+import Colors from './pages/Colors';
 // import UserTypes from './pages/UserTypes';
 
 const drawerWidth = 220;
@@ -47,7 +46,7 @@ function Layout({ children }) {
       <List>
         {navItems.map((item) => (
           <ListItem
-            button
+            
             key={item.label}
             component={Link}
             to={item.path}
@@ -151,7 +150,6 @@ function Layout({ children }) {
 
 // Dummy pages for routes (replace as you build)
 
-function Colors() { return <Typography variant="h4">Colors CRUD (TBD)</Typography>; }
 function UserTypes() { return <Typography variant="h4">User Types CRUD (TBD)</Typography>; }
 
 export default function App() {
