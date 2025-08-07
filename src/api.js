@@ -6,8 +6,7 @@ export const API_BASE_URL = "https://petsocial.onrender.com/";
 //export const API_BASE_URL = "https://localhost:7076/";
 
 export const api = axios.create({
-  baseURL: `${API_BASE_URL}`,
-  withCredentials: true,
+  baseURL: `${API_BASE_URL}`
 });
 
 // Optional: global GET failure redirect (disabled if using homepage check instead)
