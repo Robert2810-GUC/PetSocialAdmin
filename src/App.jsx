@@ -150,7 +150,7 @@ function Layout({ children }) {
 
 // Dummy pages for routes (replace as you build)
 
-function UserTypes() { return <Typography variant="h4">User Types CRUD (TBD)</Typography>; }
+function UserTypes() { return <Typography variant="h4">User Types CRUD (TBDs)</Typography>; }
 
 export default function App() {
   return (
