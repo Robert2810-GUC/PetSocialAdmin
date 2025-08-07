@@ -74,11 +74,19 @@ function Colors() {
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm("Delete this color?")) return;
-    await api.delete(`${ADMIN_API}/colors/${id}`);
+  if (!window.confirm("Delete this color?")) return;
+  try {
+    const res = await api.delete(`${ADMIN_API}/colors/${id}`);
+    setNotif({ open: true, msg: res.data || "Color deleted.", type: "success" }); // Use API message if available
     fetchColors();
-    setNotif({ open: true, msg: "Color deleted.", type: "success" });
-  };
+  } catch (err) {
+    setNotif({
+      open: true,
+      msg: err?.response?.data || "Delete failed!",
+      type: "error"
+    });
+  }
+};
 
   return (
     <Box sx={{ p: { xs: 1, sm: 3 }, bgcolor: offWhite, minHeight: "100vh" }}>

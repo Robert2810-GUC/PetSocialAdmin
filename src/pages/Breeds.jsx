@@ -82,11 +82,19 @@ function Breeds() {
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this breed?")) return;
-    await api.delete(`${ADMIN_API}/breeds/${id}`);
-    fetchBreeds();
-    setNotif({ open: true, msg: "Breed deleted.", type: "success" });
+     try {
+    const res = await api.delete(`${ADMIN_API}/breeds/${id}`);
+    setNotif({ open: true, msg: res.data || "Breed deleted.", type: "success" });
+    fetchbreeds();
+     }
+      catch (err) {
+    setNotif({
+      open: true,
+      msg: err?.response?.data || "Delete failed!",
+      type: "error"
+    });
   }
-
+}
   return (
 <Box sx={{ pt: 1, px: { xs: 1, sm: 3 }, bgcolor: offWhite, minHeight: "100vh" }}>
         <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>

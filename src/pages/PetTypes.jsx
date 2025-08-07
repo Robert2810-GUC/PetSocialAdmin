@@ -31,7 +31,7 @@ function PetTypes() {
     setLoading(false);
   }
 
-  const handleOpen = (item = { id: null, name: "", sortOrder: "", imagePath: "" }) => {
+  const handleOpen = (item = { id: null, name: "", sortOrder: 0, imagePath: "" }) => {
     setForm(item);
     setUploadFile(null);
     setOpen(true);
@@ -43,6 +43,7 @@ function PetTypes() {
     try {
       const fd = new FormData();
       fd.append("name", form.name);
+      fd.append("sortOrder", Number(form.sortOrder)); 
       if (uploadFile) fd.append("image", uploadFile);
 
       if (form.id) {
@@ -64,11 +65,20 @@ function PetTypes() {
 
   async function handleDelete(id) {
     if (!window.confirm("Delete this pet type?")) return;
+    try {
     await api.delete(`${ADMIN_API}/${id}`);
     fetchPetTypes();
     setNotif({ open: true, msg: "Pet type deleted.", type: "success" });
+     
+         }
+          catch (err) {
+        setNotif({
+          open: true,
+          msg: err?.response?.data || "Delete failed!",
+          type: "error"
+        });
   }
-
+  }
   return (
   <Box sx={{ pt: 1, px: { xs: 1, sm: 3 }, bgcolor: offWhite, minHeight: "100vh" }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
@@ -165,7 +175,7 @@ function PetTypes() {
             type="number"
             placeholder="Set 0 for default"
             value={form.sortOrder}
-            onChange={e => setForm({ ...form, sortOrder: e.target.value })}
+             onChange={e => setForm({ ...form, sortOrder: Number(e.target.value) })} 
             fullWidth sx={{ mb: 2 }}
           />
           <Button
