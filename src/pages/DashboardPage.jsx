@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { api, API_BASE_URL } from "../api";
+import { API_BASE_URL } from "../api";
 import { Box, Typography, CircularProgress } from "@mui/material";
 
 const API_CHECK_URL = `${API_BASE_URL}weatherforecast`;
@@ -20,7 +20,7 @@ export default function DashboardPage() {
       } else {
         throw new Error("API not OK");
       }
-    } catch (err) {
+    } catch {
       setServerDown(true);
       setChecking(false);
     }

@@ -5,7 +5,7 @@ import {
   ListItem, ListItemIcon, ListItemText, Divider, useTheme, useMediaQuery
 } from '@mui/material';
 import {
-  Pets, Category, Palette, Group, Menu as MenuIcon, Dashboard
+  Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard
 } from '@mui/icons-material';
 
 import ServerDown from "./pages/ServerDown";
@@ -14,7 +14,8 @@ import DashboardPage from './pages/DashboardPage';
 import PetTypes from './pages/PetTypes';
 import Breeds from './pages/Breeds';
 import Colors from './pages/Colors';
-// import UserTypes from './pages/UserTypes';
+import PetFoods from './pages/PetFoods';
+import UserTypes from './pages/UserTypes';
 
 const drawerWidth = 220;
 
@@ -23,6 +24,7 @@ const navItems = [
   { label: 'Pet Types', path: '/pet-types', icon: <Category /> },
   { label: 'Breeds', path: '/breeds', icon: <Pets /> },
   { label: 'Colors', path: '/colors', icon: <Palette /> },
+  { label: 'Pet Foods', path: '/pet-foods', icon: <Fastfood /> },
   { label: 'User Types', path: '/user-types', icon: <Group /> },
 ];
 
@@ -148,10 +150,6 @@ function Layout({ children }) {
   );
 }
 
-// Dummy pages for routes (replace as you build)
-
-function UserTypes() { return <Typography variant="h4">User Types CRUD (TBDs)</Typography>; }
-
 export default function App() {
   return (
     <BrowserRouter>
@@ -161,6 +159,7 @@ export default function App() {
           <Route path="/pet-types" element={<PetTypes />} />
           <Route path="/breeds" element={<Breeds />} />
           <Route path="/colors" element={<Colors />} />
+          <Route path="/pet-foods" element={<PetFoods />} />
           <Route path="/user-types" element={<UserTypes />} />
           <Route path="/server-down" element={<ServerDown />} />
         </Routes>
