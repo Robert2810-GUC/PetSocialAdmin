@@ -6,7 +6,7 @@ const CHECK_INTERVAL = 5000; // 5 seconds
 const API_CHECK_URL = "/weatherforecast";
 
 export default function ServerDown() {
-  const [checking, setChecking] = useState(true);
+  const [, setChecking] = useState(true);
   const [attempts, setAttempts] = useState(0);
   const navigate = useNavigate();
 
@@ -27,7 +27,7 @@ export default function ServerDown() {
       if (res.ok) {
         navigate("/"); // Redirect to home or dashboard
       }
-    } catch (err) {
+    } catch {
       setAttempts((prev) => prev + 1);
     }
     setChecking(false);
