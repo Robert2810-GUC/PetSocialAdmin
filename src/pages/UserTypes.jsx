@@ -172,7 +172,7 @@ function UserTypes() {
           if (saving) return;
           if (reason !== "backdropClick" && reason !== "escapeKeyDown") handleClose();
         }}
-        disableEscapeKeyDown={saving}
+        disableEscapeKeyDown={saving} fullWidth maxWidth="xs"
       >
         <DialogTitle sx={{ color: gold, fontWeight: 700 }}>
           {form.id ? "Edit User Type" : "Add User Type"}
@@ -197,15 +197,61 @@ function UserTypes() {
             rows={3}
             sx={{ mb: 2 }}
           />
-          <Box sx={{ mb: 2 }}>
+          <Box
+            sx={{
+              mb: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 2
+            }}
+          >
+            {/* Image Preview */}
             {(form.imageFile || form.imagePath) && (
-              <img
-                src={form.imageFile ? URL.createObjectURL(form.imageFile) : form.imagePath}
-                alt="preview"
-                style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4, marginBottom: 8 }}
-              />
+              <Box
+                sx={{
+                  width: 150,
+                  height: 150,
+                  borderRadius: 2,
+                  border: `1.5px solid ${gold}`,
+                  backgroundColor: '#f5f5f5',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  overflow: 'hidden',
+                  padding: 1,
+                }}
+              >
+                <img
+                  src={
+                    form.imageFile
+                      ? URL.createObjectURL(form.imageFile)
+                      : form.imagePath
+                  }
+                  alt="preview"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    borderRadius: 4,
+                  }}
+                />
+              </Box>
             )}
-            <Button variant="outlined" component="label">
+
+            {/* Upload / Change Image Button */}
+            <Button
+              variant="outlined"
+              component="label"
+              sx={{
+                bgcolor: "#fcf7e6",
+                color: "brown",
+                border: `1px solid ${gold}`,
+                fontWeight: 500,
+                whiteSpace: 'nowrap',
+                flexShrink: 0
+              }}
+            >
               {form.imageFile || form.imagePath ? "Change Image" : "Upload Image"}
               <input
                 type="file"

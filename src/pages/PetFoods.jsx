@@ -161,7 +161,7 @@ function PetFoods() {
           if (saving) return;
           if (reason !== "backdropClick" && reason !== "escapeKeyDown") handleClose();
         }}
-        disableEscapeKeyDown={saving}
+        disableEscapeKeyDown={saving} fullWidth maxWidth="xs"
       >
         <DialogTitle sx={{ color: gold, fontWeight: 700 }}>
           {form.id ? "Edit Pet Food" : "Add Pet Food"}

@@ -2,8 +2,8 @@
 import axios from "axios";
 
 // Use one, comment the other
-export const API_BASE_URL = "https://petsocial.onrender.com/";
-//export const API_BASE_URL = "https://localhost:7076/";
+//export const API_BASE_URL = "https://petsocial.onrender.com/";
+export const API_BASE_URL = "https://localhost:7076/";
 
 export const api = axios.create({
   baseURL: `${API_BASE_URL}`
