@@ -244,4 +244,3 @@ function UserTypes() {
 }
 
 export default UserTypes;
-
