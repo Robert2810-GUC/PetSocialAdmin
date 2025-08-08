@@ -17,7 +17,7 @@ function UserTypes() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(false);
-  const [form, setForm] = useState({ id: null, name: "", sortOrder: 0 });
+  const [form, setForm] = useState({ id: null, name: "", description: "", imagePath: "", imageFile: null });
   const [saving, setSaving] = useState(false);
   const [notif, setNotif] = useState({ open: false, msg: "", type: "success" });
 
@@ -38,8 +38,8 @@ function UserTypes() {
     setLoading(false);
   };
 
-  const handleOpen = (item = { id: null, name: "", sortOrder: 0 }) => {
-    setForm(item);
+  const handleOpen = (item = { id: null, name: "", description: "", imagePath: "" }) => {
+    setForm({ ...item, imageFile: null });
     setOpen(true);
   };
 
@@ -51,17 +51,20 @@ function UserTypes() {
   const handleSave = async () => {
     setSaving(true);
     try {
-      const payload = {
-        name: form.name.trim(),
-        sortOrder: parseInt(form.sortOrder || 0),
-      };
+      const fd = new FormData();
+      fd.append("name", form.name.trim());
+      if (form.description.trim()) fd.append("description", form.description.trim());
+      if (form.imageFile) fd.append("image", form.imageFile);
 
       if (form.id) {
-        await api.put(`${ADMIN_API}/user-types/${form.id}`, { ...form, ...payload });
+        await api.put(`${ADMIN_API}/user-types/${form.id}`, fd, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
         setNotif({ open: true, msg: "User type updated.", type: "success" });
       } else {
-        // If sortOrder is 0 → let backend auto-increment
-        await api.post(`${ADMIN_API}/user-types`, payload);
+        await api.post(`${ADMIN_API}/user-types`, fd, {
+          headers: { "Content-Type": "multipart/form-data" }
+        });
         setNotif({ open: true, msg: "User type created.", type: "success" });
       }
 
@@ -124,16 +127,24 @@ function UserTypes() {
           <Table>
             <TableHead sx={{ bgcolor: gold }}>
               <TableRow>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Image</TableCell>
                 <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Name</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Sort Order</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Description</TableCell>
                 <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {userTypes.map(row => (
                 <TableRow key={row.id}>
+                  <TableCell>
+                    <img
+                      src={row.imagePath}
+                      alt={row.name}
+                      style={{ width: 50, height: 50, objectFit: 'cover', borderRadius: 4 }}
+                    />
+                  </TableCell>
                   <TableCell sx={{ fontWeight: 600, color: brown }}>{row.name}</TableCell>
-                  <TableCell>{row.sortOrder}</TableCell>
+                  <TableCell>{row.description}</TableCell>
                   <TableCell align="right">
                     <Tooltip title="Edit">
                       <IconButton onClick={() => handleOpen(row)} sx={{ color: gold }}><Edit /></IconButton>
@@ -146,7 +157,7 @@ function UserTypes() {
               ))}
               {userTypes.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={3} align="center" sx={{ color: brown }}>No user types found.</TableCell>
+                  <TableCell colSpan={4} align="center" sx={{ color: brown }}>No user types found.</TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -172,18 +183,38 @@ function UserTypes() {
               label="User Type Name"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
-              fullWidth sx={{ mb: 2 }}
+              fullWidth
+              sx={{ mb: 2 }}
               autoFocus
             />
           </Box>
           <TextField
-            label="Sort Order (optional)"
-            type="number"
-            value={form.sortOrder}
-            placeholder="Set 0 for default"
-            onChange={e => setForm({ ...form, sortOrder: e.target.value })}
-            fullWidth sx={{ mb: 2 }}
+            label="Description"
+            value={form.description}
+            onChange={e => setForm({ ...form, description: e.target.value })}
+            fullWidth
+            multiline
+            rows={3}
+            sx={{ mb: 2 }}
           />
+          <Box sx={{ mb: 2 }}>
+            {(form.imageFile || form.imagePath) && (
+              <img
+                src={form.imageFile ? URL.createObjectURL(form.imageFile) : form.imagePath}
+                alt="preview"
+                style={{ width: 80, height: 80, objectFit: 'cover', borderRadius: 4, marginBottom: 8 }}
+              />
+            )}
+            <Button variant="outlined" component="label">
+              {form.imageFile || form.imagePath ? "Change Image" : "Upload Image"}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={e => setForm({ ...form, imageFile: e.target.files?.[0] || null })}
+              />
+            </Button>
+          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} disabled={saving}>Cancel</Button>
@@ -213,4 +244,3 @@ function UserTypes() {
 }
 
 export default UserTypes;
-
