@@ -85,7 +85,7 @@ function Breeds() {
      try {
     const res = await api.delete(`${ADMIN_API}/breeds/${id}`);
     setNotif({ open: true, msg: res.data || "Breed deleted.", type: "success" });
-    fetchbreeds();
+    fetchBreeds();
      }
       catch (err) {
     setNotif({
