@@ -9,13 +9,13 @@ import {
 } from '@mui/icons-material';
 
 import ServerDown from "./pages/ServerDown";
-
 import DashboardPage from './pages/DashboardPage';
 import PetTypes from './pages/PetTypes';
 import Breeds from './pages/Breeds';
 import Colors from './pages/Colors';
 import PetFoods from './pages/PetFoods';
 import UserTypes from './pages/UserTypes';
+import Login from './pages/Login';
 
 const drawerWidth = 220;
 
@@ -151,19 +151,33 @@ function Layout({ children }) {
 }
 
 export default function App() {
+  const [token, setToken] = React.useState(() => localStorage.getItem('token'));
+
+  const handleLogin = (tok) => {
+    localStorage.setItem('token', tok);
+    setToken(tok);
+  };
+
   return (
     <BrowserRouter>
-      <Layout>
+      {!token ? (
         <Routes>
-          <Route path="/" element={<DashboardPage />} />
-          <Route path="/pet-types" element={<PetTypes />} />
-          <Route path="/breeds" element={<Breeds />} />
-          <Route path="/colors" element={<Colors />} />
-          <Route path="/pet-foods" element={<PetFoods />} />
-          <Route path="/user-types" element={<UserTypes />} />
           <Route path="/server-down" element={<ServerDown />} />
+          <Route path="*" element={<Login onLogin={handleLogin} />} />
         </Routes>
-      </Layout>
+      ) : (
+        <Layout>
+          <Routes>
+            <Route path="/" element={<DashboardPage />} />
+            <Route path="/pet-types" element={<PetTypes />} />
+            <Route path="/breeds" element={<Breeds />} />
+            <Route path="/colors" element={<Colors />} />
+            <Route path="/pet-foods" element={<PetFoods />} />
+            <Route path="/user-types" element={<UserTypes />} />
+            <Route path="/server-down" element={<ServerDown />} />
+          </Routes>
+        </Layout>
+      )}
     </BrowserRouter>
   );
 }

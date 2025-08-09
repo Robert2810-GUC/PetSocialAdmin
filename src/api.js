@@ -9,6 +9,15 @@ export const api = axios.create({
   baseURL: `${API_BASE_URL}`
 });
 
+// Attach stored JWT token to every request
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Optional: global GET failure redirect (disabled if using homepage check instead)
 // let isServerCheckInProgress = false;
 // api.interceptors.response.use(
