@@ -22,7 +22,7 @@ import logo from './assets/logo.png';
 const drawerWidth = 220;
 
 const navItems = [
-  { label: 'Dashboard', path: '/', icon: <Dashboard /> },
+  { label: 'Dashboard', path: '/dashboardpage', icon: <Dashboard /> },
   { label: 'Pet Types', path: '/pet-types', icon: <Category /> },
   { label: 'Breeds', path: '/breeds', icon: <Pets /> },
   { label: 'Colors', path: '/colors', icon: <Palette /> },
@@ -186,7 +186,7 @@ export default function App() {
       ) : (
         <Layout onLogout={handleLogout}>
           <Routes>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/dashboardpage" element={<DashboardPage />} />
             <Route path="/pet-types" element={<PetTypes />} />
             <Route path="/breeds" element={<Breeds />} />
             <Route path="/colors" element={<Colors />} />

@@ -58,7 +58,7 @@ export default function Login({ onLogin }) {
           localStorage.removeItem('redirectAfterLogin');
           navigate(redirectPath);
         } else {
-          navigate('/');
+          navigate('/dashboardpage');
         }
       } else {
         setServerError('Unexpected response from server');
@@ -73,7 +73,7 @@ export default function Login({ onLogin }) {
   return (
     <Box
       sx={{
-        minHeight: '100vh',
+        minHeight: '80vh',
         bgcolor: offWhite,
         display: 'flex',
         alignItems: 'center',
