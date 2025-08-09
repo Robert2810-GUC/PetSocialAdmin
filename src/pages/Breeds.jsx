@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Box, Button, Dialog, DialogTitle, DialogContent, DialogActions,
   Table, TableBody, TableCell, TableHead, TableRow,
+  TableContainer, Paper,
   IconButton, TextField, CircularProgress, Tooltip, Snackbar, Alert,
   MenuItem, Select, InputLabel, FormControl
 } from "@mui/material";
@@ -136,17 +137,18 @@ function Breeds() {
       {loading ? (
         <CircularProgress sx={{ m: 4 }} />
       ) : (
-        <Box sx={{
-          overflowX: "auto",
-          background: "#fff",
-          borderRadius: 3,
-          boxShadow: "0 4px 24px #0001",
-          border: `1.5px solid ${gold}`,
-          mx: "auto"
-        }}>
-          <Table>
-            <TableHead sx={{ bgcolor: gold }}>
-              <TableRow>
+        <TableContainer
+          component={Paper}
+          sx={{
+            borderRadius: 3,
+            boxShadow: "0 4px 24px #0001",
+            border: `1.5px solid ${gold}`,
+            mx: "auto"
+          }}
+        >
+          <Table stickyHeader size="small">
+            <TableHead>
+              <TableRow sx={{ bgcolor: gold }}>
                 <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Name</TableCell>
                 <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Pet Type</TableCell>
                 <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Sort Order</TableCell>
@@ -155,7 +157,7 @@ function Breeds() {
             </TableHead>
             <TableBody>
               {breeds.map(row => (
-                <TableRow key={row.id}>
+                <TableRow hover key={row.id}>
                   <TableCell sx={{ fontWeight: 600, color: brown }}>{row.name}</TableCell>
                   <TableCell>{row.petTypeName}</TableCell>
                   <TableCell>{row.sortOrder}</TableCell>
@@ -176,7 +178,7 @@ function Breeds() {
               )}
             </TableBody>
           </Table>
-        </Box>
+        </TableContainer>
       )}
 
       {/* Add/Edit Dialog */}
