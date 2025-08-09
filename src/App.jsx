@@ -16,6 +16,7 @@ import Colors from './pages/Colors';
 import PetFoods from './pages/PetFoods';
 import UserTypes from './pages/UserTypes';
 import Login from './pages/Login';
+import logo from './assets/logo.png';
 
 const drawerWidth = 220;
 
@@ -39,11 +40,11 @@ function Layout({ children, onLogout }) {
     <div>
       <Box sx={{ display: 'flex', alignItems: 'center', p: 2, mb: 1 }}>
         <img
-          src="/logo.png"
-          alt="PetCentral"
+          src={logo}
+          alt="Pet Social"
           style={{ width: 44, marginRight: 12 }}
         />
-        <Typography variant="h6" fontWeight={700} color="#654321">PetCentral</Typography>
+        <Typography variant="h6" fontWeight={700} color="#654321">Pet Social</Typography>
       </Box>
       <Divider />
       <List>

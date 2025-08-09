@@ -12,6 +12,7 @@ import PetsIcon from '@mui/icons-material/Pets';
 import { api } from '../api';
 import { useNavigate } from 'react-router-dom';
 
+const authApi='/api/auth'
 const gold = '#ae8625';
 const brown = '#7a5c27';
 const offWhite = '#fffbe6';
@@ -48,7 +49,7 @@ export default function Login({ onLogin }) {
     setLoading(true);
     setServerError('');
     try {
-      const res = await api.post('login', { email, password });
+      const res = await api.post(`${authApi}/login`, { email, password });
       const token = res.data?.data?.token || res.data?.token;
       if (token) {
         onLogin(token);
