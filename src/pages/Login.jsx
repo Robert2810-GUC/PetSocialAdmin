@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   TextField,
@@ -23,6 +23,15 @@ export default function Login({ onLogin }) {
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
   const [serverError, setServerError] = useState('');
+  const [infoMessage, setInfoMessage] = useState('');
+
+  useEffect(() => {
+    const msg = localStorage.getItem('authMessage');
+    if (msg) {
+      setInfoMessage(msg);
+      localStorage.removeItem('authMessage');
+    }
+  }, []);
 
   const validate = () => {
     const errs = {};
@@ -43,7 +52,13 @@ export default function Login({ onLogin }) {
       const token = res.data?.data?.token || res.data?.token;
       if (token) {
         onLogin(token);
-        navigate('/');
+        const redirectPath = localStorage.getItem('redirectAfterLogin');
+        if (redirectPath) {
+          localStorage.removeItem('redirectAfterLogin');
+          navigate(redirectPath);
+        } else {
+          navigate('/');
+        }
       } else {
         setServerError('Unexpected response from server');
       }
@@ -93,9 +108,9 @@ export default function Login({ onLogin }) {
               error={Boolean(errors.password)}
               helperText={errors.password}
             />
-            {serverError && (
+            {(serverError || infoMessage) && (
               <Typography color="error" sx={{ mb: 2 }}>
-                {serverError}
+                {serverError || infoMessage}
               </Typography>
             )}
             <Button

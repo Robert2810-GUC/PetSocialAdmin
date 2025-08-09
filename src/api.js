@@ -18,6 +18,21 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// Redirect to login on unauthorized responses
+api.interceptors.response.use(
+  response => response,
+  error => {
+    if (error.response?.status === 401 && !error.config?.url?.includes('login')) {
+      const currentPath = window.location.pathname + window.location.search;
+      localStorage.removeItem('token');
+      localStorage.setItem('redirectAfterLogin', currentPath);
+      localStorage.setItem('authMessage', 'You are not logged in');
+      window.location.href = currentPath;
+    }
+    return Promise.reject(error);
+  }
+);
+
 // Optional: global GET failure redirect (disabled if using homepage check instead)
 // let isServerCheckInProgress = false;
 // api.interceptors.response.use(

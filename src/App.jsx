@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { BrowserRouter, Routes, Route, Link, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   CssBaseline, Box, Drawer, AppBar, Toolbar, Typography, IconButton, List,
-  ListItem, ListItemIcon, ListItemText, Divider, useTheme, useMediaQuery
+  ListItem, ListItemIcon, ListItemText, Divider, useTheme, useMediaQuery, Button
 } from '@mui/material';
 import {
   Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard
@@ -28,11 +28,12 @@ const navItems = [
   { label: 'User Types', path: '/user-types', icon: <Group /> },
 ];
 
-function Layout({ children }) {
+function Layout({ children, onLogout }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const drawer = (
     <div>
@@ -95,6 +96,17 @@ function Layout({ children }) {
           <Typography variant="h6" color="#fff" noWrap component="div">
             Admin Panel
           </Typography>
+          <Box sx={{ flexGrow: 1 }} />
+          <Button
+            color="inherit"
+            onClick={() => {
+              onLogout();
+              navigate('/');
+            }}
+            sx={{ textTransform: 'none' }}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
 
@@ -158,6 +170,11 @@ export default function App() {
     setToken(tok);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+  };
+
   return (
     <BrowserRouter>
       {!token ? (
@@ -166,7 +183,7 @@ export default function App() {
           <Route path="*" element={<Login onLogin={handleLogin} />} />
         </Routes>
       ) : (
-        <Layout>
+        <Layout onLogout={handleLogout}>
           <Routes>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/pet-types" element={<PetTypes />} />
