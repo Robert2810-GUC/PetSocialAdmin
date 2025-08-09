@@ -126,13 +126,13 @@ function UserTypes() {
             mx: "auto"
           }}
         >
-          <Table stickyHeader size="small">
+          <Table stickyHeader>
             <TableHead>
               <TableRow sx={{ bgcolor: gold }}>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Image</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Name</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Description</TableCell>
-                <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 }}>Actions</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Image</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Name</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Description</TableCell>
+                <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>

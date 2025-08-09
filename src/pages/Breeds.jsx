@@ -146,13 +146,13 @@ function Breeds() {
             mx: "auto"
           }}
         >
-          <Table stickyHeader size="small">
+          <Table stickyHeader>
             <TableHead>
-              <TableRow sx={{ bgcolor: gold }}>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Name</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Pet Type</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 }}>Sort Order</TableCell>
-                <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 }}>Actions</TableCell>
+              <TableRow >
+                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold  }}>Name</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Pet Type</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Sort Order</TableCell>
+                <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
