@@ -2,7 +2,8 @@ import * as React from 'react';
 import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   CssBaseline, Box, Drawer, AppBar, Toolbar, Typography, IconButton, List,
-  ListItem, ListItemIcon, ListItemText, Divider, useTheme, useMediaQuery, Button
+  ListItem, ListItemIcon, ListItemText, Divider, useTheme, useMediaQuery, Button,
+  ListItemButton, Fade
 } from '@mui/material';
 import {
   Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard
@@ -49,21 +50,17 @@ function Layout({ children, onLogout }) {
       <Divider />
       <List>
         {navItems.map((item) => (
-          <ListItem
-            
-            key={item.label}
-            component={Link}
-            to={item.path}
-            selected={location.pathname === item.path}
-            sx={{
-              '&.Mui-selected': { background: '#f2e6da', color: '#ae8625' },
-              borderRadius: 2,
-              my: 0.5,
-            }}
-            onClick={() => setMobileOpen(false)}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
+          <ListItem disablePadding key={item.label}>
+            <ListItemButton
+              component={Link}
+              to={item.path}
+              selected={location.pathname === item.path}
+              sx={{ mx: 1, my: 0.5 }}
+              onClick={() => setMobileOpen(false)}
+            >
+              <ListItemIcon sx={{ color: 'inherit' }}>{item.icon}</ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
           </ListItem>
         ))}
       </List>
@@ -79,7 +76,8 @@ function Layout({ children, onLogout }) {
         sx={{
           width: { sm: `calc(100% - ${drawerWidth}px)` },
           ml: { sm: `${drawerWidth}px` },
-          bgcolor: '#ae8625'
+          bgcolor: '#ae8625',
+          boxShadow: '0 2px 8px #0003'
         }}
         elevation={0}
       >
@@ -126,7 +124,7 @@ function Layout({ children, onLogout }) {
           sx={{
             display: { xs: 'block', sm: 'none' },
             '& .MuiDrawer-paper': {
-              boxSizing: 'border-box', width: drawerWidth, bgcolor: '#fffbe6'
+              boxSizing: 'border-box', width: drawerWidth
             },
           }}
         >
@@ -138,7 +136,7 @@ function Layout({ children, onLogout }) {
           sx={{
             display: { xs: 'none', sm: 'block' },
             '& .MuiDrawer-paper': {
-              boxSizing: 'border-box', width: drawerWidth, bgcolor: '#fffbe6'
+              boxSizing: 'border-box', width: drawerWidth
             },
           }}
           open
@@ -157,7 +155,9 @@ function Layout({ children, onLogout }) {
           mt: 8 // AppBar height
         }}
       >
-        {children}
+        <Fade in key={location.pathname} timeout={600}>
+          <Box sx={{ height: '100%' }}>{children}</Box>
+        </Fade>
       </Box>
     </Box>
   );
