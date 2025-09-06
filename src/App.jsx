@@ -17,7 +17,7 @@ import Colors from './pages/Colors';
 import PetFoods from './pages/PetFoods';
 import UserTypes from './pages/UserTypes';
 import Login from './pages/Login';
-import logo from './assets/logo.png';
+import logo from './assets/nobg_logo.png';
 
 const drawerWidth = 220;
 
@@ -43,7 +43,7 @@ function Layout({ children, onLogout }) {
         <img
           src={logo}
           alt="Pet Social"
-          style={{ width: 44, marginRight: 12 }}
+          style={{ width: 32  , marginRight: 12, marginLeft: 12 }}
         />
         <Typography variant="h6" fontWeight={700} color="#654321">Pet Social</Typography>
       </Box>
