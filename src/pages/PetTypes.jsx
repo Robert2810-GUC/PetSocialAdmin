@@ -3,9 +3,10 @@ import {
   Box, Button, Dialog, DialogTitle, DialogContent, DialogActions,
   Table, TableBody, TableCell, TableHead, TableRow,
   TableContainer, Paper,
-  IconButton, TextField, CircularProgress, Tooltip, Avatar, Snackbar, Alert
+  IconButton, TextField, CircularProgress, Tooltip, Avatar, Snackbar, Alert,
+  TablePagination, InputAdornment
 } from "@mui/material";
-import { Edit, Delete, Add } from "@mui/icons-material";
+import { Edit, Delete, Add, Search } from "@mui/icons-material";
 import { api, API_BASE_URL } from "../api";
 
 const ADMIN_API = "/api/admin/pet-types";
@@ -22,6 +23,9 @@ function PetTypes() {
   const [uploadFile, setUploadFile] = useState(null);
   const [saving, setSaving] = useState(false);
   const [notif, setNotif] = useState({ open: false, msg: "", type: "success" });
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => { fetchPetTypes(); }, []);
 
@@ -80,10 +84,35 @@ function PetTypes() {
       });
     }
   }
+  const filteredPetTypes = petTypes.filter(pt =>
+    pt.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <Box sx={{ pt: 1, px: { xs: 1, sm: 3 }, bgcolor: offWhite, minHeight: "100vh" }}>
-      <Box display="flex" alignItems="center" justifyContent="space-between" mb={3}>
+      <Box
+        display="flex"
+        alignItems="center"
+        justifyContent="space-between"
+        mb={3}
+        flexWrap="wrap"
+        gap={2}
+      >
         <h2 style={{ color: brown, fontWeight: 700, letterSpacing: 1 }}>Pet Types</h2>
+        <TextField
+          size="small"
+          placeholder="Search..."
+          value={search}
+          onChange={(e) => { setSearch(e.target.value); setPage(0); }}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
+          sx={{ minWidth: { xs: "100%", sm: 200 } }}
+        />
         <Button
           variant="contained"
           startIcon={<Add />}
@@ -111,48 +140,65 @@ function PetTypes() {
           <Table stickyHeader>
             <TableHead>
               <TableRow sx={{ bgcolor: gold }}>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Image</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Name</TableCell>
-                <TableCell sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>SortOrder</TableCell>
-                <TableCell align="right" sx={{ color: "#fff", fontWeight: 700 ,bgcolor: gold}}>Actions</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700, bgcolor: gold }}>Image</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700, bgcolor: gold }}>Name</TableCell>
+                <TableCell sx={{ color: "#fff", fontWeight: 700, bgcolor: gold }}>SortOrder</TableCell>
+                <TableCell align="right" sx={{ color: "#fff", fontWeight: 700, bgcolor: gold }}>Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {petTypes.map(row => (
-                <TableRow hover key={row.id}>
-                  <TableCell>
-                    {row.imagePath ? (
-                      <Avatar
-                        src={row.imagePath.startsWith("http") ? row.imagePath : API_BASE_URL + row.imagePath}
-                        alt={row.name}
-                        variant="rounded"
-                        sx={{ width: 48, height: 48, border: `2px solid ${gold}` }}
-                      />
-                    ) : "-"}
-                  </TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: brown }}>{row.name}</TableCell>
-                  <TableCell sx={{ fontWeight: 600, color: brown }}>{row.sortOrder}</TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Edit">
-                      <IconButton onClick={() => handleOpen(row)} sx={{ color: gold }}>
-                        <Edit />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Delete">
-                      <IconButton onClick={() => handleDelete(row.id)} sx={{ color: "#d13f25" }}>
-                        <Delete />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-              {petTypes.length === 0 && (
+              {filteredPetTypes
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row) => (
+                  <TableRow hover key={row.id}>
+                    <TableCell>
+                      {row.imagePath ? (
+                        <Avatar
+                          src={row.imagePath.startsWith("http") ? row.imagePath : API_BASE_URL + row.imagePath}
+                          alt={row.name}
+                          variant="rounded"
+                          sx={{ width: 48, height: 48, border: `2px solid ${gold}` }}
+                        />
+                      ) : "-"}
+                    </TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: brown }}>{row.name}</TableCell>
+                    <TableCell sx={{ fontWeight: 600, color: brown }}>{row.sortOrder}</TableCell>
+                    <TableCell align="right">
+                      <Tooltip title="Edit">
+                        <IconButton onClick={() => handleOpen(row)} sx={{ color: gold }}>
+                          <Edit />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Delete">
+                        <IconButton onClick={() => handleDelete(row.id)} sx={{ color: "#d13f25" }}>
+                          <Delete />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              {filteredPetTypes.length === 0 && (
                 <TableRow>
-                  <TableCell colSpan={3} align="center" sx={{ color: brown }}>No pet types found.</TableCell>
+                  <TableCell colSpan={4} align="center" sx={{ color: brown }}>
+                    No pet types found.
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
           </Table>
+          <TablePagination
+            component="div"
+            count={filteredPetTypes.length}
+            page={page}
+            onPageChange={(e, newPage) => setPage(newPage)}
+            rowsPerPage={rowsPerPage}
+            onRowsPerPageChange={(e) => {
+              setRowsPerPage(parseInt(e.target.value, 10));
+              setPage(0);
+            }}
+            rowsPerPageOptions={[5, 10, 25]}
+            sx={{ borderTop: `1px solid ${gold}` }}
+          />
         </TableContainer>
       )}
 

@@ -3,10 +3,10 @@ import { BrowserRouter, Routes, Route, Link, useLocation, useNavigate } from 're
 import {
   CssBaseline, Box, Drawer, AppBar, Toolbar, Typography, IconButton, List,
   ListItem, ListItemIcon, ListItemText, Divider, useTheme, useMediaQuery, Button,
-  ListItemButton, Fade
+  ListItemButton, Fade, TextField, InputAdornment
 } from '@mui/material';
 import {
-  Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard
+  Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard, Search
 } from '@mui/icons-material';
 
 import ServerDown from "./pages/ServerDown";
@@ -34,8 +34,13 @@ function Layout({ children, onLogout }) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [searchQuery, setSearchQuery] = React.useState('');
   const location = useLocation();
   const navigate = useNavigate();
+
+  const filteredNavItems = navItems.filter((item) =>
+    item.label.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   const drawer = (
     <div>
@@ -48,8 +53,24 @@ function Layout({ children, onLogout }) {
         <Typography variant="h6" fontWeight={700} color="#654321">Pet Social</Typography>
       </Box>
       <Divider />
+      <Box sx={{ p: 2, display: { sm: 'none' } }}>
+        <TextField
+          size="small"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <Search />
+              </InputAdornment>
+            ),
+          }}
+          fullWidth
+        />
+      </Box>
       <List>
-        {navItems.map((item) => (
+        {filteredNavItems.map((item) => (
           <ListItem disablePadding key={item.label}>
             <ListItemButton
               component={Link}
@@ -95,6 +116,27 @@ function Layout({ children, onLogout }) {
           <Typography variant="h6" color="#fff" noWrap component="div">
             Admin Panel
           </Typography>
+          {!isMobile && (
+            <TextField
+              size="small"
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{ color: '#fff' }} />
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                ml: 3,
+                '& .MuiInputBase-input': { color: '#fff' },
+                '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255,255,255,0.5)' },
+                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#fff' },
+              }}
+            />
+          )}
           <Box sx={{ flexGrow: 1 }} />
           <Button
             color="inherit"
