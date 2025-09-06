@@ -4,6 +4,10 @@ import {
   Button,
   Checkbox,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControlLabel,
   Paper,
   Table,
@@ -27,8 +31,11 @@ function PetOwners() {
   const [filters, setFilters] = useState({
     verified: false,
     goldPaw: false,
-    countryCode: ""
+    countryCode: "",
+    search: ""
   });
+  const [details, setDetails] = useState(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
 
   useEffect(() => {
     fetchOwners();
@@ -41,12 +48,24 @@ function PetOwners() {
       if (filters.verified) params.verified = true;
       if (filters.goldPaw) params.goldPaw = true;
       if (filters.countryCode.trim()) params.countryCode = filters.countryCode.trim();
+      if (filters.search.trim()) params.search = filters.search.trim();
       const res = await api.get(ADMIN_API, { params });
       setOwners(res.data);
     } catch (err) {
       console.error("Error fetching pet owners", err);
     }
     setLoading(false);
+  }
+
+  async function openDetails(id) {
+    setDetailsLoading(true);
+    try {
+      const res = await api.get(`${ADMIN_API}/${id}`);
+      setDetails(res.data);
+    } catch (err) {
+      console.error("Error fetching owner details", err);
+    }
+    setDetailsLoading(false);
   }
 
   return (
@@ -90,6 +109,12 @@ function PetOwners() {
           onChange={e => setFilters({ ...filters, countryCode: e.target.value })}
           size="small"
         />
+        <TextField
+          label="Search"
+          value={filters.search}
+          onChange={e => setFilters({ ...filters, search: e.target.value })}
+          size="small"
+        />
         <Button
           variant="contained"
           onClick={fetchOwners}
@@ -123,7 +148,7 @@ function PetOwners() {
             </TableHead>
             <TableBody>
               {owners.map(row => (
-                <TableRow hover key={row.id}>
+                <TableRow hover key={row.id} onClick={() => openDetails(row.id)} sx={{ cursor: 'pointer' }}>
                   <TableCell>{row.id}</TableCell>
                   <TableCell>{row.name}</TableCell>
                   <TableCell>{row.countryCode || "-"}</TableCell>
@@ -135,6 +160,36 @@ function PetOwners() {
           </Table>
         </TableContainer>
       )}
+      <Dialog open={Boolean(details)} onClose={() => setDetails(null)} maxWidth="md" fullWidth>
+        <DialogTitle>Pet Owner Details</DialogTitle>
+        <DialogContent dividers>
+          {detailsLoading ? (
+            <CircularProgress />
+          ) : (
+            details && (
+              <Box sx={{ color: brown }}>
+                <Box mb={1}><strong>Name:</strong> {details.name}</Box>
+                <Box mb={1}><strong>Phone:</strong> {details.phoneNumber || '-'}</Box>
+                <Box mb={1}><strong>Email:</strong> {details.email || '-'}</Box>
+                <Box mb={1}><strong>Country:</strong> {details.countryCode || '-'}</Box>
+                {details.pets && details.pets.length > 0 && (
+                  <Box mt={2}>
+                    <strong>Pets:</strong>
+                    {details.pets.map(p => (
+                      <Box key={p.id} sx={{ ml: 2, mt: 1 }}>
+                        {p.petName} - {p.petType}{p.petBreed ? ` (${p.petBreed})` : ''}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </Box>
+            )
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDetails(null)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

@@ -3,6 +3,10 @@ import {
   Box,
   Button,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Paper,
   Table,
   TableBody,
@@ -23,6 +27,9 @@ function BusinessProfiles() {
   const [businesses, setBusinesses] = useState([]);
   const [loading, setLoading] = useState(true);
   const [countryCode, setCountryCode] = useState("");
+  const [search, setSearch] = useState("");
+  const [details, setDetails] = useState(null);
+  const [detailsLoading, setDetailsLoading] = useState(false);
 
   useEffect(() => {
     fetchBusinesses();
@@ -33,12 +40,24 @@ function BusinessProfiles() {
     try {
       const params = {};
       if (countryCode.trim()) params.countryCode = countryCode.trim();
+      if (search.trim()) params.search = search.trim();
       const res = await api.get(ADMIN_API, { params });
       setBusinesses(res.data);
     } catch (err) {
       console.error("Error fetching businesses", err);
     }
     setLoading(false);
+  }
+
+  async function openDetails(id) {
+    setDetailsLoading(true);
+    try {
+      const res = await api.get(`${ADMIN_API}/${id}`);
+      setDetails(res.data);
+    } catch (err) {
+      console.error("Error fetching business details", err);
+    }
+    setDetailsLoading(false);
   }
 
   return (
@@ -52,6 +71,12 @@ function BusinessProfiles() {
           label="Country Code"
           value={countryCode}
           onChange={(e) => setCountryCode(e.target.value)}
+          size="small"
+        />
+        <TextField
+          label="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
           size="small"
         />
         <Button
@@ -86,7 +111,7 @@ function BusinessProfiles() {
             </TableHead>
             <TableBody>
               {businesses.map((b) => (
-                <TableRow hover key={b.id}>
+                <TableRow hover key={b.id} onClick={() => openDetails(b.id)} sx={{ cursor: 'pointer' }}>
                   <TableCell>{b.id}</TableCell>
                   <TableCell>{b.businessName}</TableCell>
                   <TableCell>{b.countryCode || "-"}</TableCell>
@@ -97,6 +122,31 @@ function BusinessProfiles() {
           </Table>
         </TableContainer>
       )}
+      <Dialog open={Boolean(details)} onClose={() => setDetails(null)} maxWidth="sm" fullWidth>
+        <DialogTitle>Business Details</DialogTitle>
+        <DialogContent dividers>
+          {detailsLoading ? (
+            <CircularProgress />
+          ) : (
+            details && (
+              <Box sx={{ color: brown }}>
+                <Box mb={1}><strong>Name:</strong> {details.business?.businessName || details.name}</Box>
+                <Box mb={1}><strong>Phone:</strong> {details.phoneNumber || '-'}</Box>
+                <Box mb={1}><strong>Email:</strong> {details.email || '-'}</Box>
+                <Box mb={1}><strong>Country:</strong> {details.countryCode || '-'}</Box>
+                {details.business && (
+                  <Box mt={2}>
+                    <Box mb={1}><strong>Address:</strong> {details.business.address || '-'}</Box>
+                  </Box>
+                )}
+              </Box>
+            )
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDetails(null)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
