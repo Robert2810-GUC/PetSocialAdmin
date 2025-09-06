@@ -6,7 +6,8 @@ import {
   ListItemButton, Fade
 } from '@mui/material';
 import {
-  Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard
+  Pets, Category, Palette, Group, Fastfood, Menu as MenuIcon, Dashboard,
+  People, Store, AutoStories
 } from '@mui/icons-material';
 
 import ServerDown from "./pages/ServerDown";
@@ -16,6 +17,9 @@ import Breeds from './pages/Breeds';
 import Colors from './pages/Colors';
 import PetFoods from './pages/PetFoods';
 import UserTypes from './pages/UserTypes';
+import PetOwners from './pages/PetOwners';
+import BusinessProfiles from './pages/BusinessProfiles';
+import Stories from './pages/Stories';
 import Login from './pages/Login';
 import logo from './assets/nobg_logo.png';
 
@@ -28,6 +32,9 @@ const navItems = [
   { label: 'Colors', path: '/colors', icon: <Palette /> },
   { label: 'Pet Foods', path: '/pet-foods', icon: <Fastfood /> },
   { label: 'User Types', path: '/user-types', icon: <Group /> },
+  { label: 'Pet Owners', path: '/pet-owners', icon: <People /> },
+  { label: 'Businesses', path: '/business-profiles', icon: <Store /> },
+  { label: 'Stories', path: '/stories', icon: <AutoStories /> },
 ];
 
 function Layout({ children, onLogout }) {
@@ -192,6 +199,9 @@ export default function App() {
             <Route path="/colors" element={<Colors />} />
             <Route path="/pet-foods" element={<PetFoods />} />
             <Route path="/user-types" element={<UserTypes />} />
+            <Route path="/pet-owners" element={<PetOwners />} />
+            <Route path="/business-profiles" element={<BusinessProfiles />} />
+            <Route path="/stories" element={<Stories />} />
             <Route path="/server-down" element={<ServerDown />} />
           </Routes>
         </Layout>
