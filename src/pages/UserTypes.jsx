@@ -5,7 +5,7 @@ import {
   TableContainer, Paper,
   IconButton, TextField, CircularProgress, Tooltip, Snackbar, Alert
 } from "@mui/material";
-import { Edit, Delete, Add, Search, DisabledVisible } from "@mui/icons-material";
+import { Edit, Add, Search } from "@mui/icons-material";
 import { api } from "../api";
 
 const ADMIN_API = "/api/admin";
@@ -77,20 +77,6 @@ function UserTypes() {
     setSaving(false);
   };
 
-  const handleDelete = async (id) => {
-    if (!window.confirm("Delete this user type?")) return;
-    try {
-      const res = await api.delete(`${ADMIN_API}/user-types/${id}`);
-      setNotif({ open: true, msg: res.data || "User type deleted.", type: "success" });
-      fetchUserTypes();
-    } catch (err) {
-      setNotif({
-        open: true,
-        msg: err?.response?.data || "Delete failed!",
-        type: "error"
-      });
-    }
-  };
 
   return (
     <Box sx={{ p: { xs: 1, sm: 3 }, bgcolor: offWhite, minHeight: "100vh" }}>
