@@ -96,14 +96,14 @@ function UserTypes() {
     <Box sx={{ p: { xs: 1, sm: 3 }, bgcolor: offWhite, minHeight: "100vh" }}>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
         <h2 style={{ color: brown, fontWeight: 700, letterSpacing: 1 }}>User Types</h2>
-        {/* <Button
+        <Button
           variant="contained"
           startIcon={<Add />}
           sx={{ bgcolor: gold, color: "#fff", fontWeight: 600, borderRadius: 2, "&:hover": { bgcolor: brown } }}
           onClick={() => handleOpen()}
         >
           Add User Type
-        </Button> */}
+        </Button>
       </Box>
 
       <TextField
@@ -151,9 +151,9 @@ function UserTypes() {
                     <Tooltip title="Edit">
                       <IconButton onClick={() => handleOpen(row)} sx={{ color: gold }}><Edit /></IconButton>
                     </Tooltip>
-                    {/* <Tooltip title="Delete">
+                    <Tooltip title="Delete">
                       <IconButton onClick={() => handleDelete(row.id)} sx={{ color: "#d13f25" }}><Delete /></IconButton>
-                    </Tooltip> */}
+                    </Tooltip>
                   </TableCell>
                 </TableRow>
               ))}
@@ -181,14 +181,13 @@ function UserTypes() {
         </DialogTitle>
         <DialogContent sx={{ py: 3 }}>
           <Box sx={{ mt: 1 }}>
-            <TextField
+              <TextField
               label="User Type Name"
               value={form.name}
               onChange={e => setForm({ ...form, name: e.target.value })}
               fullWidth
               sx={{ mb: 2 }}
               autoFocus
-              disabled={Boolean(form.id)}   
             />
           </Box>
           <TextField

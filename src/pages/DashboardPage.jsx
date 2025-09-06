@@ -1,25 +1,23 @@
 import { useEffect, useRef, useState } from "react";
-import { API_BASE_URL } from "../api";
 import { Box, Typography, CircularProgress } from "@mui/material";
+import { api, API_BASE_URL } from "../api";
 
-const API_CHECK_URL = `${API_BASE_URL}weatherforecast`;
-const CHECK_INTERVAL = 5000; // 10 seconds
+const DASHBOARD_API = "/api/admin/dashboard";
+const CHECK_INTERVAL = 5000; // 5 seconds
 
 export default function DashboardPage() {
   const [serverDown, setServerDown] = useState(false);
   const [checking, setChecking] = useState(true);
+  const [stats, setStats] = useState(null);
   const intervalRef = useRef(null);
 
   const checkAPIHealth = async () => {
     try {
-      const res = await fetch(API_CHECK_URL, { method: "GET" });
-      if (res.ok) {
-        setServerDown(false);
-        setChecking(false);
-        clearInterval(intervalRef.current); // ✅ stop retrying when back
-      } else {
-        throw new Error("API not OK");
-      }
+      const res = await api.get(DASHBOARD_API);
+      setStats(res.data);
+      setServerDown(false);
+      setChecking(false);
+      clearInterval(intervalRef.current);
     } catch {
       setServerDown(true);
       setChecking(false);
@@ -27,22 +25,18 @@ export default function DashboardPage() {
   };
 
   useEffect(() => {
-    // Run first time immediately
     checkAPIHealth();
 
-    // Retry loop only if it's down
     intervalRef.current = setInterval(() => {
       checkAPIHealth();
     }, CHECK_INTERVAL);
 
-    return () => clearInterval(intervalRef.current); // cleanup
+    return () => clearInterval(intervalRef.current);
   }, []);
 
   if (checking) {
     return (
-      <Box sx={{
-        minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center"
-      }}>
+      <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
         <CircularProgress />
       </Box>
     );
@@ -81,12 +75,26 @@ export default function DashboardPage() {
 
   return (
     <Box sx={{ p: 4 }}>
-      <Typography variant="h4" sx={{ fontWeight: 700, color: "#4e3e15" }}>
-        Welcome to PetSocial Admin Panel
+      <Typography variant="h4" sx={{ fontWeight: 700, color: "#4e3e15", mb: 3 }}>
+        Dashboard
       </Typography>
-      <Typography variant="body1" sx={{ mt: 1 }}>
-        The API is live. You’re good to go!
-      </Typography>
+      {stats && (
+        <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+          <Box sx={{ flex: "1 1 200px" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>Pet Owners</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.petOwners ?? stats.PetOwners}</Typography>
+          </Box>
+          <Box sx={{ flex: "1 1 200px" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>Businesses</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.businesses ?? stats.Businesses}</Typography>
+          </Box>
+          <Box sx={{ flex: "1 1 200px" }}>
+            <Typography variant="h6" sx={{ fontWeight: 700 }}>Stories</Typography>
+            <Typography variant="h4" sx={{ fontWeight: 700 }}>{stats.stories ?? stats.Stories}</Typography>
+          </Box>
+        </Box>
+      )}
     </Box>
   );
 }
+
