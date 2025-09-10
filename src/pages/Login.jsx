@@ -49,7 +49,7 @@ export default function Login({ onLogin }) {
     setLoading(true);
     setServerError('');
     try {
-      const res = await api.post(`${authApi}/login`, { email, password });
+      const res = await api.post(`${authApi}/admin-login`, { email, password });
       const token = res.data?.data?.token || res.data?.token;
       if (token) {
         onLogin(token);
